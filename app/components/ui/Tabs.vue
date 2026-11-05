@@ -5,6 +5,8 @@ const props = defineProps<{
   tabs: T[];
   /** Accessible name for the tab list. */
   label: string;
+  /** Center the tab row (from sm up; on mobile it always spans the width and scrolls). */
+  center?: boolean;
 }>();
 
 /** Active tab id; defaults to the first tab. */
@@ -51,41 +53,43 @@ const panelTransition = computed(() => ({ duration: reduceMotion.value ? 0 : 0.2
 
 <template>
   <div>
-    <div
-      role="tablist"
-      :aria-label="label"
-      class="flex w-full gap-1 overflow-x-auto rounded-full bg-zinc-100 p-1 [scrollbar-width:none] sm:inline-flex sm:w-auto dark:bg-zinc-800/80"
-    >
-      <button
-        v-for="(tab, i) in tabs"
-        :id="tabId(tab.id)"
-        :key="tab.id"
-        type="button"
-        role="tab"
-        :aria-selected="tab.id === activeId"
-        :aria-controls="panelId(tab.id)"
-        :tabindex="tab.id === activeId ? 0 : -1"
-        class="relative shrink-0 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
-        :class="
-          tab.id === activeId
-            ? 'text-white'
-            : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
-        "
-        @click="select(i)"
-        @keydown="onKeydown($event, i)"
+    <div :class="center && 'sm:text-center'">
+      <div
+        role="tablist"
+        :aria-label="label"
+        class="flex w-full gap-1 overflow-x-auto rounded-full bg-zinc-100 p-1 [scrollbar-width:none] sm:inline-flex sm:w-auto dark:bg-zinc-800/80"
       >
-        <!-- One shared layoutId per Tabs instance: the pill slides between tabs. -->
-        <Motion
-          v-if="tab.id === activeId"
-          :layout-id="`${uid}-indicator`"
-          class="absolute inset-0 rounded-full bg-grape shadow-md shadow-grape/30"
-          :transition="indicatorSpring"
-        />
-        <span class="relative inline-flex items-center gap-2">
-          <Icon v-if="tab.icon" :name="tab.icon" class="size-4" aria-hidden="true" />
-          {{ tab.label }}
-        </span>
-      </button>
+        <button
+          v-for="(tab, i) in tabs"
+          :id="tabId(tab.id)"
+          :key="tab.id"
+          type="button"
+          role="tab"
+          :aria-selected="tab.id === activeId"
+          :aria-controls="panelId(tab.id)"
+          :tabindex="tab.id === activeId ? 0 : -1"
+          class="relative shrink-0 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+          :class="
+            tab.id === activeId
+              ? 'text-white'
+              : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+          "
+          @click="select(i)"
+          @keydown="onKeydown($event, i)"
+        >
+          <!-- One shared layoutId per Tabs instance: the pill slides between tabs. -->
+          <Motion
+            v-if="tab.id === activeId"
+            :layout-id="`${uid}-indicator`"
+            class="absolute inset-0 rounded-full bg-grape shadow-md shadow-grape/30"
+            :transition="indicatorSpring"
+          />
+          <span class="relative inline-flex items-center gap-2">
+            <Icon v-if="tab.icon" :name="tab.icon" class="size-4" aria-hidden="true" />
+            {{ tab.label }}
+          </span>
+        </button>
+      </div>
     </div>
 
     <AnimatePresence mode="wait" :initial="false">

@@ -45,6 +45,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Colors in components:** take a `color: ThemeColor` prop and pick classes from `COLOR_CLASSES` (`~/utils/themeColors`), which holds full class strings so Tailwind detects them. Never build class names like `` `bg-${color}` ``. For colored *text* use `text-<color>-ink dark:text-<color>-glow`, because the base colors fail contrast as small text.
 - **Overlays** (menu, modal, future lightbox): `<Teleport to="#teleports">` + `useFocusTrap(el, open, close)` + `useScrollLock(open)`. `UiModal` already does all of this, so reuse it.
 - **Toasts:** `<UiToast />` is mounted once in the default layout. Call `useToast().toast({ title, description?, type })` from anywhere.
+- **Page tops:** use `<SectionsPageHeader eyebrow title lead color>`, with an optional `#aside` slot for an illustration.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
@@ -59,6 +60,9 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Motion playback speed:** never set an animation's `speed` to exactly 0. Ease to something like 0.001 (see `UiMarquee`).
 - **vue-tsc and URL template literals:** vue-tsc 3.3 mangles `` :src="`https://…${x}`" `` on components (the `//` turns into a comment start), which silently breaks type-checking for the rest of the template ("Cannot find name", bogus `.value` errors). Build URLs in script, e.g. with `picsum(seed, w, h)` from `~/utils/picsum`.
 - **Illustrations:** use `<UiIllustration name="cta" alt=… :width :height>`. The available files are read from `public/illustrations/` at dev/build start (`runtimeConfig.public.illustrations`), so missing ones render a labelled placeholder with no request. Adding an SVG restarts the dev server.
+- **Layout reflow animations:** a Motion element with `layout` only animates when *it* re-renders. When siblings are filtered or removed and the survivors should glide, wrap the list in `<LayoutGroup>` (see `SectionsGalleryGrid`). `layoutId` indicators (nav underline, tabs, filter pill) work without it. Verify layout animations by sampling transforms per frame, not by checking end positions.
+- **Hidden interactive content:** use `inert` on content that is visually hidden but still in the DOM (e.g. the far side of `UiFlipCard`). `aria-hidden` alone leaves its links focusable.
+- **Picsum people photos are not portraits:** seeds return random scenes, so photos standing in for people get `alt=""` when the name is shown as text.
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.

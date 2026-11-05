@@ -114,7 +114,7 @@ const transition = computed(() =>
           <figcaption class="mt-8 flex items-center justify-center gap-4">
             <NuxtImg
               :src="picsum(current.avatarSeed, 120, 120)"
-              :alt="`Portrait of ${current.name}`"
+              alt=""
               width="56"
               height="56"
               loading="lazy"

@@ -235,7 +235,7 @@ const props = withDefaults(
 - [x] Split-text letter/word reveal (`SplitText`)
 - [x] Page + layout transitions (CSS in `main.css`)
 - [x] `AnimatePresence` enter/exit (mobile menu, modal, toast)
-- [ ] Layout animations (tabs indicator, gallery filter reorder)
+- [x] Layout animations (tabs indicator, gallery filter reorder)
 - [x] Spring hover / tap scale on buttons and cards
 - [ ] Drag with constraints (playground, 404 page)
 - [x] Parallax with `useScroll` + `useTransform` (`Parallax`)
@@ -247,7 +247,7 @@ const props = withDefaults(
 - [x] Magnetic button following the cursor (`MagneticButton`)
 - [x] Theme toggle sun/moon morph (`ThemeToggle`)
 - [ ] Form error shake + success checkmark SVG path draw
-- [ ] Card flip on hover (About team cards)
+- [x] Card flip on hover (About team cards)
 - [x] Animated gradient text (`.text-prism`)
 - [ ] Typewriter text effect (Playground AI widget)
 
@@ -336,8 +336,8 @@ const props = withDefaults(
 **Accept when:** Home matches the spec, smooth at 60fps on desktop, responsive at 375/768/1280.
 
 ### Phase 5 — About, Services, Gallery
-- [ ] Build `/about`, `/services`, `/gallery` per section 5.
-- [ ] Add data files: `team.ts`, `pricing.ts`, `faq.ts`, `gallery.ts`.
+- [x] Build `/about`, `/services`, `/gallery` per section 5.
+- [x] Add data files: `team.ts`, `pricing.ts`, `faq.ts`, `gallery.ts`.
 
 **Accept when:** all three pages match the spec, gallery filter animates reorder, lightbox works with keyboard.
 
@@ -441,6 +441,10 @@ Download from https://undraw.co, set the accent color to `#7c3aed` (grape), save
 - [ ] `success.svg` (e.g. "completed")
 - [ ] `not-found.svg` (e.g. "page not found")
 - [ ] `cta.svg` (e.g. "launching")
+- [ ] `services-design.svg` (e.g. "designer")
+- [ ] `services-strategy.svg` (e.g. "planning")
+- [ ] `services-branding.svg` (e.g. "logo design")
+- [ ] `services-motion.svg` (e.g. "animating")
 
 (The agent should add any additional needed filenames here.)
 
@@ -477,3 +481,9 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 4 — Added `useMotionEnabled()`: false during SSR and hydration, then `!prefersReducedMotion`. Use it for anything *rendered* that depends on reduced motion (the carousel's pause button and `aria-live` caused a hydration mismatch before this).
 - 2026-11-05 — Phase 4 — Testimonials: slides stack in one grid cell (exit and enter overlap with no height jump). Auto-play runs only while the carousel is in view, pauses on hover or focus, has a pause button and is off for reduced motion. Swipe uses motion drag. Controls are in `sections/TestimonialsControls.vue`.
 - 2026-11-05 — Phase 4 — Contrast: `StatsBand` uses a darker `grape-ink → grape → coral-ink` gradient (white text, worst pixel 4.85:1 including the blobs). The light-mode `CtaBand` pastel is at 60% so the grape-ink button text passes (4.84:1).
+- 2026-11-05 — Phase 5 — Data: `team.ts`, `pricing.ts`, `faq.ts`, `gallery.ts` as planned, plus `about.ts` (timeline, values) and `services.ts`. Each service tab has its own illustration, so 4 filenames were added to §9.
+- 2026-11-05 — Phase 5 — Shared `sections/PageHeader.vue` (badge, split h1, lead, optional `#aside` that slides in from the right) for About, Services and Gallery, and reusable for Blog and Contact.
+- 2026-11-05 — Phase 5 — Added `ui/FlipCard.vue`: flips on mouse hover, and the full-card button flips it for touch and keyboard. The face turned away is `inert` (not `aria-hidden`, which would leave its links focusable), and focus moves to the visible face.
+- 2026-11-05 — Phase 5 — Gallery masonry is a CSS grid with 10px rows and per-shape row spans, which keeps every tile in one parent so layout animations can move them. Tiles are wrapped in `<LayoutGroup>`: in motion-v a `layout` element only measures itself when *it* re-renders, so without the group the surviving tiles jumped instead of gliding.
+- 2026-11-05 — Phase 5 — The lightbox reuses `UiModal` (focus trap, ESC, focus return), browses within the active filter, and keeps the last photo rendered during the exit animation.
+- 2026-11-05 — Phase 5 — `UiTabs` gained a `center` prop. Placeholder people photos (team, testimonial avatars) use `alt=""`: Picsum returns random scenes, not portraits, and the names are shown as text.
