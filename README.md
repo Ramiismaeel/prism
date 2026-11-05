@@ -49,7 +49,7 @@ Deploy the `.output/` folder as a Node server (`node .output/server/index.mjs`).
 
 ## What's inside
 
-**Pages:** Home, About, Services, Gallery, Playground, Blog (list + articles), Contact and a custom 404/error page.
+**Pages:** Home, About, Services, Gallery, Playground, Blog (list + articles), Contact and a custom 404/error page. The Playground shows everything at once: 8 quick animation tiles, a live demo of every motion and UI kit component, and the AI tagline widget.
 
 **Motion kit** (`app/components/motion`): `Reveal`, `StaggerList`, `SplitText`, `CountUp`, `Parallax`, `GradientBlob`, `Typewriter`.
 
