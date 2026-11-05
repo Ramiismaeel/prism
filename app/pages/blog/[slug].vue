@@ -63,10 +63,12 @@ useSeoMeta({
 
       <MotionReveal :y="40" :delay="0.2" class="mx-auto mt-10 max-w-5xl px-4 sm:px-6 lg:px-8">
         <NuxtImg
+          format="webp"
           :src="cover"
           alt=""
           width="1600"
           height="800"
+          sizes="100vw lg:1024px"
           loading="eager"
           fetchpriority="high"
           preload

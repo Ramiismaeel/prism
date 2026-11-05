@@ -2,17 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project plan comes first
+## Project plan
 
-`PROJECT_PLAN.md` is the single source of truth for this project ("Prism", an animated Nuxt playground and fictional creative studio site). Before doing any work:
-
-1. Read `PROJECT_PLAN.md` and find the first phase in section 6 that still has unchecked boxes.
-2. Do **one phase only**. Then verify its "Accept when" criteria (run the dev server), tick the checkboxes in the plan, and stop and report what you built and how you checked it.
-3. Commit after each phase with `git commit -m "phase N: <title>"`.
-4. If a package API differs from the reference code in the plan, follow the current official docs and add an entry to the plan's **Change Log** (section 10).
-5. When a unDraw illustration is missing, render a colored placeholder box that shows the expected filename, and add the file to section 9 (Assets To Download).
-
-The plan holds the full spec: pages, sections, the animation catalogue and the target folder layout. Don't copy it here; read it.
+`PROJECT_PLAN.md` holds the original spec (pages, sections, animation catalogue) and a **Change Log** (§10) of every deviation and its reason. All 9 phases are complete. For new work, keep the plan's Global Rules (§1), add a dated Change Log entry when you deviate, and commit with a descriptive message.
 
 ## Commands
 
@@ -38,7 +30,6 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Styling:** use Tailwind v4 through `@tailwindcss/vite`. There is no `tailwind.config`. The theme tokens live in the `@theme` block in `main.css`: the colors `grape`, `coral`, `sun`, `mint` and `sky`, and the fonts `font-display` and `font-body`. Custom CSS goes only in `main.css`.
 - **Dark mode:** `@nuxtjs/color-mode` with `classSuffix: ''` puts a `dark` class on `<html>`, and `@custom-variant dark` in `main.css` connects the `dark:` variant to that class. Every component must work in both themes. Wrap the theme toggle in `<ClientOnly>` to avoid hydration mismatches.
 - **Images:** use `<NuxtImg>` with Lorem Picsum (`https://picsum.photos/seed/<word>/<w>/<h>`). `picsum.photos` is the only allowed image domain. Always use a fixed seed and set `alt`, `width`, `height` and `loading="lazy"` (except on the hero image). Illustrations are served from `/illustrations/<name>.svg` (`public/illustrations/`).
-- **Forms:** Phase 7 plans one shared Zod schema in `app/utils/contactSchema.ts`. Both the client form and `server/api/contact.post.ts` import it.
 - **Secrets / AI widget:** the Claude API key is set only through `runtimeConfig.anthropicApiKey`, which comes from `NUXT_ANTHROPIC_API_KEY` in `.env` (gitignored; template in `.env.example`). It is read only on the server, in `server/api/tagline.post.ts` (Haiku 5.5, structured outputs, rate-limited). Without a key the endpoint returns 503 and the widget shows a friendly toast. Test the UI by mocking `/api/tagline`; real calls cost money.
 
 - **Motion kit** (`app/components/motion/*`, used as `<MotionReveal>`, `<MotionSplitText>`, …): built on `<Motion :as>`, with `as` typed as `MotionTag` from `~/types/motion`. Never type it as `string`, because that breaks motion-v's prop types. `app.vue` wraps everything in `<MotionConfig reduced-motion="user">`.
@@ -48,6 +39,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Page tops:** use `<SectionsPageHeader eyebrow title lead color>`, with an optional `#aside` slot for an illustration.
 - **Blog:** posts and helpers live in `app/data/posts.ts` (format dates with `formatDate`, which uses UTC so there's no hydration mismatch). Cards are `<BlogPostCard>`.
 - **Forms:** compose `Form*` components (`FormInput`, `FormTextarea`, `FormSelect`, `FormRadioGroup`, `FormCheckbox`, `FormStepIndicator`). Each takes an `error` prop and handles `aria-invalid`/`aria-describedby` itself. Validate with the shared Zod schema (`#shared/utils/contactSchema`) on both client and server.
+- **Playground:** `pages/playground.vue` is a grid of `PlaygroundTile*` components (one animation each, wrapped in `<PlaygroundTile title how>`, whose info tooltip explains the technique) plus the AI lab. Add a demo as a new tile, not a new page section.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
@@ -70,6 +62,8 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Tailwind v4 transforms:** `scale-*`, `rotate-*` and `translate-*` set the individual CSS `scale`/`rotate`/`translate` properties, not `transform`. Measure them via `getComputedStyle(el).scale` etc.; Motion's animations do use `transform`.
 - **Picsum seed collisions:** different seeds can return the same photo (`blog-2-cover` = `blog-5-cover`). When adding seeds, resolve them (`curl -w '%{redirect_url}' https://picsum.photos/seed/<seed>/200/200`) and compare the `/id/<n>/` values.
 - **Focus after `AnimatePresence mode="wait"`:** the new child mounts only after the old one has left, so `nextTick` focuses the *old* element. Focus from a watcher on the new element's template ref (see `ContactForm`).
+- **Windows + production server:** a `node .output/server/index.mjs` started behind `timeout` survives stopping the shell and keeps file locks in `.output/`, so the next `nuxt build` fails silently. Start it with `exec node …` and confirm the port is free afterwards.
+- **Lighthouse:** run it against the production build (`npm run build` + `node .output/server/index.mjs`), not the dev server. Use `npx lighthouse@12 <url> --chrome-flags="--headless=new"` with `CHROME_PATH` pointing at Chrome. Current baseline: A11y/Best Practices/SEO 100, Performance 76–86 (mobile).
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.

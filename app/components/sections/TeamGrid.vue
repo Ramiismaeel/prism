@@ -32,10 +32,12 @@ const BACK: Record<ThemeColor, string> = {
           <!-- Picsum seeds are random scenes, not portraits: decorative (alt=""), the name is right below. -->
           <article class="relative h-full overflow-hidden rounded-3xl bg-zinc-200 dark:bg-zinc-800">
             <NuxtImg
+              format="webp"
               :src="picsum(item.photoSeed, 600, 800)"
               alt=""
               width="600"
               height="800"
+              sizes="100vw sm:50vw lg:400px"
               loading="lazy"
               class="h-full w-full object-cover"
             />

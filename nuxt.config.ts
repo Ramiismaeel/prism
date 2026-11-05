@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     ],
   },
   image: { domains: ["picsum.photos", "fastly.picsum.photos"] }, // picsum redirects to its fastly CDN
+  // Pre-compress JS/CSS/SVG (gzip + brotli) at build time; the Node server serves them when accepted.
+  nitro: { compressPublicAssets: true },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },

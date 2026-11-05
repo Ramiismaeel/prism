@@ -58,7 +58,7 @@ const year = new Date().getFullYear();
 
     <div class="border-t border-zinc-200 dark:border-zinc-800">
       <p
-        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-5 text-xs text-zinc-500 sm:px-6 lg:px-8 dark:text-zinc-500"
+        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-5 text-xs text-zinc-600 sm:px-6 lg:px-8 dark:text-zinc-400"
       >
         <span>© {{ year }} Prism Studio. All colors reserved.</span>
         <span class="inline-flex items-center gap-1">

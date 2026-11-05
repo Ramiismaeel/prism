@@ -14,7 +14,7 @@ import { clients } from "~/data/clients";
       <span
         v-for="c in clients"
         :key="c.name"
-        class="inline-flex items-center gap-2 font-display text-2xl font-bold text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-white"
+        class="inline-flex items-center gap-2 font-display text-2xl font-bold text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
       >
         <Icon :name="c.icon" class="size-7" aria-hidden="true" />{{ c.name }}
       </span>

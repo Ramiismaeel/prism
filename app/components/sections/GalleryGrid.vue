@@ -39,7 +39,7 @@ const spring = computed(() =>
         @click="active = f.id"
       >
         <Motion v-if="active === f.id" layout-id="gallery-filter" class="absolute inset-0 rounded-full bg-grape" :transition="spring" />
-        <span class="relative">{{ f.label }} <span class="opacity-75">{{ count(f.id) }}</span></span>
+        <span class="relative">{{ f.label }} <span class="font-normal">{{ count(f.id) }}</span></span>
       </button>
     </div>
     <p class="sr-only" aria-live="polite">Showing {{ visible.length }} photos</p>
@@ -72,10 +72,12 @@ const spring = computed(() =>
           @click="lightbox = i"
         >
           <NuxtImg
+            format="webp"
             :src="picsum(item.id, SHAPE_SIZE[item.shape].width, SHAPE_SIZE[item.shape].height)"
             :alt="item.title"
             :width="SHAPE_SIZE[item.shape].width / 2"
             :height="SHAPE_SIZE[item.shape].height / 2"
+            sizes="100vw sm:50vw lg:400px"
             loading="lazy"
             class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

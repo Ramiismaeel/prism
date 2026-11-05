@@ -27,7 +27,7 @@ const arrowClass =
         v-for="i in count"
         :key="i"
         type="button"
-        class="grid h-6 place-items-center px-1"
+        class="grid h-6 min-w-6 place-items-center px-1"
         :aria-label="`Show testimonial ${i}`"
         :aria-current="i - 1 === index ? 'true' : undefined"
         @click="$emit('go', i - 1)"

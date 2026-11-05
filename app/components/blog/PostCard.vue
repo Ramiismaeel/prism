@@ -25,10 +25,12 @@ withDefaults(
       <div class="overflow-hidden">
         <!-- Covers are random Picsum scenes: decorative, the title says what the post is about. -->
         <NuxtImg
+          format="webp"
           :src="picsum(post.coverSeed, 1200, 800)"
           alt=""
           width="600"
           height="400"
+          sizes="100vw sm:50vw lg:400px"
           loading="lazy"
           class="aspect-[3/2] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />

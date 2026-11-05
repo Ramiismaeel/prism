@@ -79,6 +79,7 @@ const transition = computed(() =>
             :transition="transition"
           >
             <NuxtImg
+              format="webp"
               :src="picsum(item.id, large.width, large.height)"
               :alt="item.title"
               :width="large.width"

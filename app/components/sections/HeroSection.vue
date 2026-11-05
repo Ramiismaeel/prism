@@ -41,6 +41,7 @@ const avatars = ["avatar-ada", "avatar-kenji", "avatar-priya", "avatar-mateo"];
             <NuxtImg
               v-for="seed in avatars"
               :key="seed"
+              format="webp"
               :src="picsum(seed, 96, 96)"
               alt=""
               width="40"
@@ -60,10 +61,12 @@ const avatars = ["avatar-ada", "avatar-kenji", "avatar-priya", "avatar-mateo"];
         <div class="relative h-[22rem] overflow-hidden rounded-[2.5rem] shadow-2xl shadow-grape/20 sm:h-[30rem]">
           <MotionParallax :offset="60">
             <NuxtImg
+              format="webp"
               :src="picsum('prism-hero', 1200, 1400)"
               alt="Colorful abstract scene full of light"
               width="1200"
               height="1400"
+              sizes="100vw lg:600px"
               loading="eager"
               fetchpriority="high"
               preload

@@ -237,7 +237,7 @@ const props = withDefaults(
 - [x] `AnimatePresence` enter/exit (mobile menu, modal, toast)
 - [x] Layout animations (tabs indicator, gallery filter reorder)
 - [x] Spring hover / tap scale on buttons and cards
-- [ ] Drag with constraints (playground, 404 page)
+- [x] Drag with constraints (playground, 404 page)
 - [x] Parallax with `useScroll` + `useTransform` (`Parallax`)
 - [x] Scroll progress bar (`ScrollProgress`)
 - [x] Count-up numbers when in view (`CountUp`)
@@ -400,12 +400,12 @@ export default defineEventHandler(async (event) => {
 **Accept when:** widget returns 3 taglines, no API key reaches the browser (check the Network tab and the client bundle).
 
 ### Phase 9 — Polish
-- [ ] Review every page in light and dark mode.
-- [ ] Check responsive at 375 / 768 / 1280.
-- [ ] Test with OS "reduce motion" enabled.
-- [ ] Run Lighthouse; fix any accessibility issues below 90.
-- [ ] Remove temporary demos that are no longer needed; keep the playground tidy.
-- [ ] Update `README.md` with setup steps.
+- [x] Review every page in light and dark mode.
+- [x] Check responsive at 375 / 768 / 1280.
+- [x] Test with OS "reduce motion" enabled.
+- [x] Run Lighthouse; fix any accessibility issues below 90.
+- [x] Remove temporary demos that are no longer needed; keep the playground tidy.
+- [x] Update `README.md` with setup steps.
 
 **Accept when:** all checkboxes in section 4 (Animation Catalogue) are ticked.
 
@@ -503,3 +503,7 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 8 — Errors map to safe statuses without leaking provider details: 400 bad idea, 503 missing or invalid key, 422 refusal (Haiku 5.5 has no server-side fallback), 429 rate limited, 502/503 provider/network. Added a small per-IP in-memory rate limit (`server/utils/rateLimit.ts`, 8/min) because every call costs money. Idea limits are shared in `shared/utils/tagline.ts`.
 - 2026-11-05 — Phase 8 — `.env` (gitignored) has an empty `NUXT_ANTHROPIC_API_KEY=` for the user to fill in. `.env.example` is committed. Verified: production client bundle has 0 references to the server key config; with a fake key set, no page, payload or response contains it, and the real SDK call maps Anthropic's 401 to the friendly 503.
 - 2026-11-05 — Phase 8 — Added `components/motion/Typewriter.vue` (motion-v `animate()`-driven; full text for screen readers; instant with reduced motion). The widget lives in a new "AI lab" section of the playground, with a loading shimmer, staggered typed results, copy buttons and error toasts. UI tests mock the endpoint; no real model calls were made (no key available).
+- 2026-11-05 — Phase 9 — The playground was rebuilt to the §5 spec: 8 single-animation tiles (`components/playground/Tile*.vue`: drag with constraints, spring slider, magnetic button, tilt card, morphing shape, confetti, scroll-linked spin, toast trigger), each with an info tooltip explaining the technique, plus the AI lab. The temporary Phase 2/3 kit showcases (`MotionDemos`, `ControlsDemo`, `SurfacesDemo`, `OverlaysDemo`, `DisclosureDemo`) were removed; every kit component is now used on a real page or tile.
+- 2026-11-05 — Phase 9 — Lighthouse (mobile, production build) fixes: dark-mode footer and marquee text contrast, the gallery chip count on the active pill, `role="group"` moved from `<figure>` to a wrapper `<div>` in the carousel, and testimonial dots enlarged to a 24px target. Result: Accessibility 100, Best Practices 100, SEO 100 on all 8 pages.
+- 2026-11-05 — Phase 9 — Performance: `nitro.compressPublicAssets` (Brotli/gzip; JS/CSS went from ~492 KiB uncompressed to 170 KiB of JS transferred), WebP for every `NuxtImg`, and responsive `sizes` on the large images. Performance went from 61–67 to 76–86 and LCP from 5.8–7.2 s to 3.4–4.4 s. The remaining LCP cost is render delay from the intentional above-the-fold entrance animations (content starts invisible until hydration), which is documented in the README.
+- 2026-11-05 — Phase 9 — Final sweep: 9 routes × 3 widths (375/768/1280) × light/dark with no overflow and no console errors, and every route hydrates cleanly with reduced motion. README rewritten with setup, scripts, env, structure, accessibility notes and credits.

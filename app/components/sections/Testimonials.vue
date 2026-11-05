@@ -86,7 +86,7 @@ const transition = computed(() =>
       <AnimatePresence :initial="false" :custom="direction">
         <Motion
           :key="index"
-          as="figure"
+          as="div"
           role="group"
           aria-roledescription="slide"
           :aria-label="`${index + 1} of ${testimonials.length}`"
@@ -102,31 +102,34 @@ const transition = computed(() =>
           :drag-elastic="0.4"
           @drag-end="onDragEnd"
         >
-          <Icon
-            name="lucide:quote"
-            class="mx-auto mb-6 size-10"
-            :class="COLOR_CLASSES[current.color].text"
-            aria-hidden="true"
-          />
-          <blockquote class="font-display text-xl leading-relaxed font-medium sm:text-2xl">
-            “{{ current.quote }}”
-          </blockquote>
-          <figcaption class="mt-8 flex items-center justify-center gap-4">
-            <NuxtImg
-              :src="picsum(current.avatarSeed, 120, 120)"
-              alt=""
-              width="56"
-              height="56"
-              loading="lazy"
-              draggable="false"
-              class="size-14 rounded-full object-cover ring-4"
-              :class="RING[current.color]"
+          <figure>
+            <Icon
+              name="lucide:quote"
+              class="mx-auto mb-6 size-10"
+              :class="COLOR_CLASSES[current.color].text"
+              aria-hidden="true"
             />
-            <div class="text-left">
-              <p class="font-semibold">{{ current.name }}</p>
-              <p class="text-sm text-zinc-600 dark:text-zinc-400">{{ current.role }}</p>
-            </div>
-          </figcaption>
+            <blockquote class="font-display text-xl leading-relaxed font-medium sm:text-2xl">
+              “{{ current.quote }}”
+            </blockquote>
+            <figcaption class="mt-8 flex items-center justify-center gap-4">
+              <NuxtImg
+                format="webp"
+                :src="picsum(current.avatarSeed, 120, 120)"
+                alt=""
+                width="56"
+                height="56"
+                loading="lazy"
+                draggable="false"
+                class="size-14 rounded-full object-cover ring-4"
+                :class="RING[current.color]"
+              />
+              <div class="text-left">
+                <p class="font-semibold">{{ current.name }}</p>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400">{{ current.role }}</p>
+              </div>
+            </figcaption>
+          </figure>
         </Motion>
       </AnimatePresence>
     </div>
