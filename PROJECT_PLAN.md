@@ -441,12 +441,14 @@ Download from https://undraw.co, set the accent color to `#7c3aed` (grape), save
 - [ ] `success.svg` (e.g. "completed")
 - [ ] `not-found.svg` (e.g. "page not found")
 - [ ] `cta.svg` (e.g. "launching")
-- [ ] `services-design.svg` (e.g. "designer")
-- [ ] `services-strategy.svg` (e.g. "planning")
-- [ ] `services-branding.svg` (e.g. "logo design")
-- [ ] `services-motion.svg` (e.g. "animating")
+- [x] `services-design.svg` (e.g. "designer")
+- [x] `services-strategy.svg` (e.g. "planning")
+- [x] `services-branding.svg` (e.g. "logo design")
+- [x] `services-motion.svg` (e.g. "animating")
 
 (The agent should add any additional needed filenames here.)
+
+Note: the four `services-*.svg` files use their own accent colors (#b839a1, #3955b8, #0e95c7, #c70e39) rather than grape. Fine as per-service variety, or recolor them by replacing that hex in each file.
 
 ---
 
@@ -487,3 +489,4 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 5 — Gallery masonry is a CSS grid with 10px rows and per-shape row spans, which keeps every tile in one parent so layout animations can move them. Tiles are wrapped in `<LayoutGroup>`: in motion-v a `layout` element only measures itself when *it* re-renders, so without the group the surviving tiles jumped instead of gliding.
 - 2026-11-05 — Phase 5 — The lightbox reuses `UiModal` (focus trap, ESC, focus return), browses within the active filter, and keeps the last photo rendered during the exit animation.
 - 2026-11-05 — Phase 5 — `UiTabs` gained a `center` prop. Placeholder people photos (team, testimonial avatars) use `alt=""`: Picsum returns random scenes, not portraits, and the names are shown as text.
+- 2026-11-05 — Fix — The illustration list moved from `nuxt.config.ts` into the local module `modules/illustrations.ts`. The Phase 4 `watch` entry never fired: Nuxt resolves it relative to `srcDir` (`app/`), and its watcher doesn't cover `public/`. The module watches `public/illustrations/` itself in dev and restarts Nuxt when SVGs are added or removed (tested both ways). The 4 service illustrations are in place; their accents are not grape (see §9 note).

@@ -1,14 +1,4 @@
-import { existsSync, readdirSync } from "node:fs";
 import tailwindcss from "@tailwindcss/vite";
-
-// unDraw files present in public/illustrations. <UiIllustration> renders a placeholder for
-// anything missing without requesting it (no 404s). Adding a file restarts the dev server.
-const ILLUSTRATIONS_DIR = "public/illustrations";
-const illustrations = existsSync(ILLUSTRATIONS_DIR)
-  ? readdirSync(ILLUSTRATIONS_DIR)
-      .filter((f) => f.endsWith(".svg"))
-      .map((f) => f.slice(0, -4))
-  : [];
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
@@ -43,7 +33,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     anthropicApiKey: "", // filled by NUXT_ANTHROPIC_API_KEY in .env
-    public: { illustrations },
+    // Filled by modules/illustrations.ts from the files in public/illustrations.
+    public: { illustrations: [] as string[] },
   },
-  watch: [`${ILLUSTRATIONS_DIR}/*.svg`],
 });
