@@ -342,8 +342,8 @@ const props = withDefaults(
 **Accept when:** all three pages match the spec, gallery filter animates reorder, lightbox works with keyboard.
 
 ### Phase 6 — Blog
-- [ ] `data/posts.ts`, `/blog` list, `/blog/[slug]` article per section 5.
-- [ ] Use `useSeoMeta` for title/description on each page.
+- [x] `data/posts.ts`, `/blog` list, `/blog/[slug]` article per section 5.
+- [x] Use `useSeoMeta` for title/description on each page.
 
 **Accept when:** list → article navigation animated, unknown slug shows the error page.
 
@@ -490,3 +490,7 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 5 — The lightbox reuses `UiModal` (focus trap, ESC, focus return), browses within the active filter, and keeps the last photo rendered during the exit animation.
 - 2026-11-05 — Phase 5 — `UiTabs` gained a `center` prop. Placeholder people photos (team, testimonial avatars) use `alt=""`: Picsum returns random scenes, not portraits, and the names are shown as text.
 - 2026-11-05 — Fix — The illustration list moved from `nuxt.config.ts` into the local module `modules/illustrations.ts`. The Phase 4 `watch` entry never fired: Nuxt resolves it relative to `srcDir` (`app/`), and its watcher doesn't cover `public/`. The module watches `public/illustrations/` itself in dev and restarts Nuxt when SVGs are added or removed (tested both ways). The 4 service illustrations are in place; their accents are not grape (see §9 note).
+- 2026-11-05 — Phase 6 — `data/posts.ts` also exports helpers: `sortedPosts`, `getPost`, `getRelated` (most shared tags, then newest), `readingMinutes` and `formatDate`. Dates are formatted in UTC so server and client always agree. Post cards are `components/blog/PostCard.vue`: one stretched title link per card, with a focus ring on the card. The Blog header uses `hero.svg`, since the home hero uses a Picsum photo as specified.
+- 2026-11-05 — Phase 6 — Unknown slugs use `definePageMeta({ validate })` returning a 404 error, not `throw createError()` in setup: on client navigation a setup throw doesn't stop rendering (Vue rendered the page with `post` undefined and crashed). Verified: SSR returns HTTP 404, client navigation shows the error page, and production returns 404.
+- 2026-11-05 — Phase 6 — `main.css` base rules (html/body/headings/focus outline) moved into `@layer base`. Unlayered, they beat every Tailwind utility regardless of specificity, e.g. `focus-visible:outline-none` and `font-body` had no effect.
+- 2026-11-05 — Phase 6 — `blog-5-cover` resolves to the same Picsum photo as `blog-2-cover`, so post 5 uses `blog-5-calm`. All 39 seeds on the site were checked for collisions.

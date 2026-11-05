@@ -46,6 +46,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Overlays** (menu, modal, future lightbox): `<Teleport to="#teleports">` + `useFocusTrap(el, open, close)` + `useScrollLock(open)`. `UiModal` already does all of this, so reuse it.
 - **Toasts:** `<UiToast />` is mounted once in the default layout. Call `useToast().toast({ title, description?, type })` from anywhere.
 - **Page tops:** use `<SectionsPageHeader eyebrow title lead color>`, with an optional `#aside` slot for an illustration.
+- **Blog:** posts and helpers live in `app/data/posts.ts` (format dates with `formatDate`, which uses UTC so there's no hydration mismatch). Cards are `<BlogPostCard>`.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
@@ -63,6 +64,10 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Layout reflow animations:** a Motion element with `layout` only animates when *it* re-renders. When siblings are filtered or removed and the survivors should glide, wrap the list in `<LayoutGroup>` (see `SectionsGalleryGrid`). `layoutId` indicators (nav underline, tabs, filter pill) work without it. Verify layout animations by sampling transforms per frame, not by checking end positions.
 - **Hidden interactive content:** use `inert` on content that is visually hidden but still in the DOM (e.g. the far side of `UiFlipCard`). `aria-hidden` alone leaves its links focusable.
 - **Picsum people photos are not portraits:** seeds return random scenes, so photos standing in for people get `alt=""` when the name is shown as text.
+- **404 for dynamic routes:** validate params with `definePageMeta({ validate: (route) => exists || createError({ statusCode: 404, … }) })`. Don't `throw createError()` in `<script setup>`: on client navigation Vue keeps rendering the page with the missing data.
+- **CSS layers:** global element styles in `main.css` must stay inside `@layer base`. Unlayered CSS overrides every Tailwind utility regardless of specificity.
+- **Tailwind v4 transforms:** `scale-*`, `rotate-*` and `translate-*` set the individual CSS `scale`/`rotate`/`translate` properties, not `transform`. Measure them via `getComputedStyle(el).scale` etc.; Motion's animations do use `transform`.
+- **Picsum seed collisions:** different seeds can return the same photo (`blog-2-cover` = `blog-5-cover`). When adding seeds, resolve them (`curl -w '%{redirect_url}' https://picsum.photos/seed/<seed>/200/200`) and compare the `/id/<n>/` values.
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.
