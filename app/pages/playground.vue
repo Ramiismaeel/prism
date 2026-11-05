@@ -1,14 +1,14 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Playground",
-  description: "Poke the pixels: quick animation demos, the full motion and UI kits, and a tiny Claude-powered tagline machine.",
+  description: "Poke the pixels: quick animation demos, the full motion and UI kits, and a tiny AI-powered tagline machine (Claude or Gemini).",
 });
 
 const sections = [
   { id: "quick-demos", title: "Quick demos", blurb: "One animation per tile: drag it, slide it, tilt it, pop it. Hover the info buttons to see how each works." },
   { id: "motion-kit", title: "Motion kit", blurb: "Scroll-driven and in-view animations used across the site." },
   { id: "ui-kit", title: "UI kit", blurb: "Buttons, badges, toggles, tooltips, cards, overlays and disclosure widgets." },
-  { id: "ai-lab", title: "AI lab", blurb: "A tiny Claude-powered widget, with the API key kept on the server." },
+  { id: "ai-lab", title: "AI lab", blurb: "A tiny AI-powered widget (Claude or Gemini), with the API key kept on the server." },
 ];
 </script>
 

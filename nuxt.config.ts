@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     anthropicApiKey: "", // filled by NUXT_ANTHROPIC_API_KEY in .env
+    geminiApiKey: "", // filled by NUXT_GEMINI_API_KEY in .env (used when no Claude key is set)
     // Filled by modules/illustrations.ts from the files in public/illustrations.
     public: { illustrations: [] as string[] },
   },

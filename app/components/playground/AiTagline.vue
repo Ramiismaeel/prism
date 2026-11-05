@@ -5,7 +5,10 @@ import { IDEA_MAX, IDEA_MIN } from "#shared/utils/tagline";
 const idea = ref("");
 const loading = ref(false);
 const taglines = ref<string[]>([]);
-const demo = ref(false); // true when the server has no API key and returned sample taglines
+type Provider = "claude" | "gemini";
+interface TaglineResponse { taglines: string[]; provider: Provider | "demo"; demo: boolean; fallbackFrom?: Provider }
+const result = ref<Omit<TaglineResponse, "taglines"> | null>(null);
+const PROVIDER_NAME: Record<Provider, string> = { claude: "Claude (Haiku)", gemini: "Gemini (Flash-Lite)" };
 const runId = ref(0); // re-keys the results so each run animates fresh
 const { toast } = useToast();
 
@@ -16,9 +19,9 @@ async function generate() {
   loading.value = true;
   taglines.value = [];
   try {
-    const res = await $fetch<{ taglines: string[]; demo: boolean }>("/api/tagline", { method: "POST", body: { idea: idea.value } });
-    taglines.value = res.taglines;
-    demo.value = res.demo;
+    const { taglines: list, ...meta } = await $fetch<TaglineResponse>("/api/tagline", { method: "POST", body: { idea: idea.value } });
+    taglines.value = list;
+    result.value = meta;
     runId.value++;
   } catch (err) {
     const message = (err as { data?: { statusMessage?: string } }).data?.statusMessage;
@@ -45,7 +48,7 @@ const pulse = computed(() => (reduceMotion.value ? { duration: 0 } : { duration:
 <template>
   <PlaygroundDemoBlock
     title="AI tagline machine"
-    description="Describe a startup idea and Claude (Haiku) writes three playful taglines. With an API key set, your idea is sent to Anthropic's API; without one, the widget runs in demo mode."
+    description="Describe a startup idea and an AI model writes three playful taglines: Claude or Gemini, whichever API key the server has. Your idea is sent to that provider; with no key set, the widget runs in demo mode."
   >
     <form class="space-y-4" @submit.prevent="generate">
       <FormTextarea v-model="idea" label="Your startup idea" name="idea" :rows="2" :maxlength="IDEA_MAX" />
@@ -56,16 +59,29 @@ const pulse = computed(() => (reduceMotion.value ? { duration: 0 } : { duration:
 
     <!-- Announce results once they arrive. -->
     <p class="sr-only" aria-live="polite">
-      {{ loading ? "Generating taglines" : taglines.length ? `${taglines.length} ${demo ? "sample " : ""}taglines ready` : "" }}
+      {{ loading ? "Generating taglines" : taglines.length ? `${taglines.length} ${result?.demo ? "sample " : ""}taglines ready` : "" }}
     </p>
 
-    <p
-      v-if="demo && taglines.length && !loading"
-      class="mt-6 flex items-start gap-2 rounded-2xl bg-sun/15 px-4 py-3 text-sm text-sun-ink dark:bg-sun/10 dark:text-sun-glow"
-    >
-      <Icon name="lucide:flask-conical" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-      <span><strong>Demo mode:</strong> these are sample taglines. Add an Anthropic API key (<code class="font-mono text-xs">NUXT_ANTHROPIC_API_KEY</code>) to get real ones from Claude.</span>
-    </p>
+    <template v-if="result && taglines.length && !loading">
+      <!-- Samples: either no key is configured, or the provider was busy and we fell back. -->
+      <p
+        v-if="result.demo"
+        class="mt-6 flex items-start gap-2 rounded-2xl bg-sun/15 px-4 py-3 text-sm text-sun-ink dark:bg-sun/10 dark:text-sun-glow"
+      >
+        <Icon name="lucide:flask-conical" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+        <span v-if="result.fallbackFrom">
+          <strong>{{ PROVIDER_NAME[result.fallbackFrom] }} is busy right now,</strong> so these are sample taglines. Try again in a moment.
+        </span>
+        <span v-else>
+          <strong>Demo mode:</strong> these are sample taglines. Add <code class="font-mono text-xs">NUXT_GEMINI_API_KEY</code> or
+          <code class="font-mono text-xs">NUXT_ANTHROPIC_API_KEY</code> on the server to get real ones.
+        </span>
+      </p>
+      <p v-else class="mt-6 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <Icon name="lucide:sparkles" class="size-4 text-grape-ink dark:text-grape-glow" aria-hidden="true" />
+        Written by {{ PROVIDER_NAME[result.provider as Provider] }}
+      </p>
+    </template>
 
     <div class="mt-6 min-h-[13rem]">
       <AnimatePresence mode="wait">

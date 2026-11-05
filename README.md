@@ -14,7 +14,7 @@ A playful, fictional creative-studio website built to explore animation in Nuxt:
 | Light/dark | `@nuxtjs/color-mode` |
 | Icons / fonts / images | `@nuxt/icon` (Lucide, Simple Icons), `@nuxt/fonts` (Space Grotesk, Inter), `@nuxt/image` + Lorem Picsum |
 | Forms | Zod, validated on both client and server |
-| AI widget | Claude (Haiku) via `@anthropic-ai/sdk` |
+| AI widget | Claude (Haiku) via `@anthropic-ai/sdk`, or Gemini (Flash-Lite) via `@google/genai` |
 
 ## Getting started
 
@@ -27,13 +27,16 @@ npm run dev          # http://localhost:3000
 
 ### Optional: the AI tagline widget
 
-The Playground's "AI lab" calls Claude from the server. Copy `.env.example` to `.env` and add your key:
+The Playground's "AI lab" calls an AI model from the server. Copy `.env.example` to `.env` and add **one** key:
 
 ```bash
-NUXT_ANTHROPIC_API_KEY=sk-ant-...
+NUXT_GEMINI_API_KEY=...        # Gemini Flash-Lite: free tier at https://aistudio.google.com/app/apikey
+NUXT_ANTHROPIC_API_KEY=sk-ant-... # Claude Haiku: https://platform.claude.com (used first if both are set)
 ```
 
-Without a key the widget runs in **demo mode**: it returns sample taglines built from your idea (clearly labelled as samples) and makes no external calls. Add a key and it switches to Claude automatically. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
+If the provider is busy or the key is wrong, the widget falls back to labelled sample taglines (the reason is logged on the server). Restart the dev server after changing `.env`. In production, pass the variables to the Node process (e.g. `node --env-file=.env .output/server/index.mjs`).
+
+Without a key the widget runs in **demo mode**: it returns sample taglines built from your idea (clearly labelled as samples) and makes no external calls. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
 
 ## Scripts
 
