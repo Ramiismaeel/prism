@@ -434,13 +434,13 @@ export default defineEventHandler(async (event) => {
 
 Download from https://undraw.co, set the accent color to `#7c3aed` (grape), save as SVG in `public/illustrations/`:
 
-- [ ] `hero.svg` (e.g. "creative thinking")
-- [ ] `about.svg` (e.g. "team spirit")
-- [ ] `services.svg` (e.g. "design process")
-- [ ] `contact.svg` (e.g. "mail sent")
-- [ ] `success.svg` (e.g. "completed")
-- [ ] `not-found.svg` (e.g. "page not found")
-- [ ] `cta.svg` (e.g. "launching")
+- [x] `hero.svg` (e.g. "creative thinking")
+- [x] `about.svg` (e.g. "team spirit")
+- [x] `services.svg` (e.g. "design process")
+- [x] `contact.svg` (e.g. "mail sent")
+- [x] `success.svg` (e.g. "completed")
+- [x] `not-found.svg` (e.g. "page not found")
+- [x] `cta.svg` (e.g. "launching")
 - [x] `services-design.svg` (e.g. "designer")
 - [x] `services-strategy.svg` (e.g. "planning")
 - [x] `services-branding.svg` (e.g. "logo design")
@@ -448,7 +448,7 @@ Download from https://undraw.co, set the accent color to `#7c3aed` (grape), save
 
 (The agent should add any additional needed filenames here.)
 
-Note: the four `services-*.svg` files use their own accent colors (#b839a1, #3955b8, #0e95c7, #c70e39) rather than grape. Fine as per-service variety, or recolor them by replacing that hex in each file.
+Note: the downloaded files use their own accent colors rather than grape (e.g. the `services-*.svg` set uses #b839a1, #3955b8, #0e95c7 and #c70e39). Fine as per-service variety, or recolor them by replacing that hex in each file.
 
 ---
 
