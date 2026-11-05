@@ -32,7 +32,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 
 ## Architecture and conventions
 
-- **Nuxt 4 layout:** app code lives in `app/` (pages, layouts, components, composables, `data/`, `utils/`). Server routes live in `server/api/`. Components are auto-imported and get a prefix from their folder, so `components/ui/BaseButton.vue` is used as `<UiBaseButton>`.
+- **Nuxt 4 layout:** app code lives in `app/` (pages, layouts, components, composables, `data/`, `utils/`). Server routes live in `server/api/`. Code used by both the app and the server goes in `shared/` (import with `#shared/...`); the server can't import from `app/`. Components are auto-imported and get a prefix from their folder, so `components/ui/BaseButton.vue` is used as `<UiBaseButton>`.
 - **Component library:** reusable pieces live in `app/components/{layout,ui,motion,sections,form}`. Reuse them and never duplicate one. Keep components under about 150 lines. Toasts go through a `useToast()` composable.
 - **Animation:** use `motion-v` only (`motion`, `AnimatePresence`, `useScroll`, `useTransform`, `useSpring`, `useInView`, `useReducedMotion`). It is registered through the `motion-v/nuxt` module. Route-level page and layout transitions are CSS classes (`.page-*`, `.layout-*`) in `app/assets/css/main.css`, wired up through `app.pageTransition` and `app.layoutTransition` in `nuxt.config.ts`. Heavy animations must check `useReducedMotion()`. The global CSS `prefers-reduced-motion` block is a fallback and must stay.
 - **Styling:** use Tailwind v4 through `@tailwindcss/vite`. There is no `tailwind.config`. The theme tokens live in the `@theme` block in `main.css`: the colors `grape`, `coral`, `sun`, `mint` and `sky`, and the fonts `font-display` and `font-body`. Custom CSS goes only in `main.css`.
@@ -47,6 +47,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Toasts:** `<UiToast />` is mounted once in the default layout. Call `useToast().toast({ title, description?, type })` from anywhere.
 - **Page tops:** use `<SectionsPageHeader eyebrow title lead color>`, with an optional `#aside` slot for an illustration.
 - **Blog:** posts and helpers live in `app/data/posts.ts` (format dates with `formatDate`, which uses UTC so there's no hydration mismatch). Cards are `<BlogPostCard>`.
+- **Forms:** compose `Form*` components (`FormInput`, `FormTextarea`, `FormSelect`, `FormRadioGroup`, `FormCheckbox`, `FormStepIndicator`). Each takes an `error` prop and handles `aria-invalid`/`aria-describedby` itself. Validate with the shared Zod schema (`#shared/utils/contactSchema`) on both client and server.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
@@ -68,6 +69,7 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **CSS layers:** global element styles in `main.css` must stay inside `@layer base`. Unlayered CSS overrides every Tailwind utility regardless of specificity.
 - **Tailwind v4 transforms:** `scale-*`, `rotate-*` and `translate-*` set the individual CSS `scale`/`rotate`/`translate` properties, not `transform`. Measure them via `getComputedStyle(el).scale` etc.; Motion's animations do use `transform`.
 - **Picsum seed collisions:** different seeds can return the same photo (`blog-2-cover` = `blog-5-cover`). When adding seeds, resolve them (`curl -w '%{redirect_url}' https://picsum.photos/seed/<seed>/200/200`) and compare the `/id/<n>/` values.
+- **Focus after `AnimatePresence mode="wait"`:** the new child mounts only after the old one has left, so `nextTick` focuses the *old* element. Focus from a watcher on the new element's template ref (see `ContactForm`).
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.

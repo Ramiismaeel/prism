@@ -246,7 +246,7 @@ const props = withDefaults(
 - [x] 3D tilt following the cursor (`TiltCard`)
 - [x] Magnetic button following the cursor (`MagneticButton`)
 - [x] Theme toggle sun/moon morph (`ThemeToggle`)
-- [ ] Form error shake + success checkmark SVG path draw
+- [x] Form error shake + success checkmark SVG path draw
 - [x] Card flip on hover (About team cards)
 - [x] Animated gradient text (`.text-prism`)
 - [ ] Typewriter text effect (Playground AI widget)
@@ -348,10 +348,10 @@ const props = withDefaults(
 **Accept when:** list → article navigation animated, unknown slug shows the error page.
 
 ### Phase 7 — Contact Form + Error Page
-- [ ] Form components in `components/form/`.
-- [ ] Multi-step contact page with Zod (shared schema in `app/utils/contactSchema.ts`, also used by the server).
-- [ ] `server/api/contact.post.ts`: validate with the same Zod schema, return `{ ok: true }` or a 400 with field errors. (No real email sending; just `console.log` the message.)
-- [ ] `app/error.vue` per section 5.
+- [x] Form components in `components/form/`.
+- [x] Multi-step contact page with Zod (shared schema in `app/utils/contactSchema.ts`, also used by the server).
+- [x] `server/api/contact.post.ts`: validate with the same Zod schema, return `{ ok: true }` or a 400 with field errors. (No real email sending; just `console.log` the message.)
+- [x] `app/error.vue` per section 5.
 
 **Accept when:** invalid input shows errors + shake, valid submit shows success animation + toast, server rejects invalid payloads.
 
@@ -494,3 +494,8 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 6 — Unknown slugs use `definePageMeta({ validate })` returning a 404 error, not `throw createError()` in setup: on client navigation a setup throw doesn't stop rendering (Vue rendered the page with `post` undefined and crashed). Verified: SSR returns HTTP 404, client navigation shows the error page, and production returns 404.
 - 2026-11-05 — Phase 6 — `main.css` base rules (html/body/headings/focus outline) moved into `@layer base`. Unlayered, they beat every Tailwind utility regardless of specificity, e.g. `focus-visible:outline-none` and `font-body` had no effect.
 - 2026-11-05 — Phase 6 — `blog-5-cover` resolves to the same Picsum photo as `blog-2-cover`, so post 5 uses `blog-5-calm`. All 39 seeds on the site were checked for collisions.
+- 2026-11-05 — Phase 7 — The shared Zod schema lives in `shared/utils/contactSchema.ts` (Nuxt 4's folder for code shared by app and server; server code can't import from `app/`) instead of `app/utils/`. It also exports `TOPICS`, `BUDGETS`, `CONTACT_STEPS` (fields per step) and `fieldErrors()`.
+- 2026-11-05 — Phase 7 — Form components: `FormInput`/`FormTextarea` (floating labels via `placeholder=" "` + `peer-placeholder-shown`), native `FormSelect`, `FormRadioGroup` (real radios in styled cards, used for budget; not in the plan's list), `FormCheckbox` (tick drawn with pathLength), `FormStepIndicator` and `FormFieldError`. Errors use `aria-invalid` + `aria-describedby`; on a failed step, focus moves to the first invalid field. Errors clear as soon as the value becomes valid.
+- 2026-11-05 — Phase 7 — Step changes use `AnimatePresence mode="wait"`, which mounts the next step only after the old one has left. Focus (step heading, or the field the server rejected) is applied when the new step mounts, not on `nextTick`.
+- 2026-11-05 — Phase 7 — A server 400 maps `data.fieldErrors` back to the step that owns the first bad field, and shows an error toast.
+- 2026-11-05 — Phase 7 — `error.vue` wraps itself in `<MotionConfig>` and `<NuxtLayout>` (it replaces app.vue). 4xx errors show their message; 5xx stay generic. It sets `robots: noindex`. In dev, visiting an unknown URL logs Vue Router/Nuxt diagnostics (R0004/E1005); production is clean.
