@@ -25,18 +25,18 @@ npm install          # also runs `nuxt prepare`
 npm run dev          # http://localhost:3000
 ```
 
-### Optional: the AI tagline widget
+### Optional: the AI lab (component generator + tagline machine)
 
-The Playground's "AI lab" calls an AI model from the server. Copy `.env.example` to `.env` and add **one** key:
+The Playground's "AI lab" has two AI tools: a **component generator** (describe a component, e.g. "a mint toggle for dark mode", and the AI picks one from Prism's kit and fills in its settings; it never writes code, the recipe is validated on the server and rendered with Prism's real components) and a **tagline machine**. Both call an AI model from the server. Copy `.env.example` to `.env` and add **one** key:
 
 ```bash
 NUXT_GEMINI_API_KEY=...        # Gemini Flash-Lite: free tier at https://aistudio.google.com/app/apikey
 NUXT_ANTHROPIC_API_KEY=sk-ant-... # Claude Haiku: https://platform.claude.com (used first if both are set)
 ```
 
-If the provider is busy or the key is wrong, the widget falls back to labelled sample taglines (the reason is logged on the server). Restart the dev server after changing `.env`. In production, pass the variables to the Node process (e.g. `node --env-file=.env .output/server/index.mjs`).
+If the provider is busy or the key is wrong, the tools fall back to labelled samples (the reason is logged on the server). Restart the dev server after changing `.env`. In production, pass the variables to the Node process (e.g. `node --env-file=.env .output/server/index.mjs`).
 
-Without a key the widget runs in **demo mode**: it returns sample taglines built from your idea (clearly labelled as samples) and makes no external calls. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
+Without a key both tools run in **demo mode**: they return clearly labelled samples (a keyword-matched component, template taglines) and make no external calls. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
 
 ## Scripts
 
@@ -52,7 +52,7 @@ Deploy the `.output/` folder as a Node server (`node .output/server/index.mjs`).
 
 ## What's inside
 
-**Pages:** Home, About, Services, Gallery, Playground, Blog (list + articles), Contact and a custom 404/error page. The Playground shows everything at once: 8 quick animation tiles, a live demo of every motion and UI kit component, and the AI tagline widget.
+**Pages:** Home, About, Services, Gallery, Playground, Blog (list + articles), Contact and a custom 404/error page. The Playground shows everything at once: 8 quick animation tiles, a live demo of every motion and UI kit component, and the AI lab.
 
 **Motion kit** (`app/components/motion`): `Reveal`, `StaggerList`, `SplitText`, `CountUp`, `Parallax`, `GradientBlob`, `Typewriter`.
 
