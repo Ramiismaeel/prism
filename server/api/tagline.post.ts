@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
+import { demoTaglines } from "#shared/utils/demoTaglines";
 import { IDEA_MAX, IDEA_MIN } from "#shared/utils/tagline";
 
 const Body = z.object({ idea: z.string().trim().min(IDEA_MIN).max(IDEA_MAX) });
@@ -16,8 +17,9 @@ const SYSTEM =
 let client: Anthropic | undefined;
 
 /**
- * POST /api/tagline { idea } → { taglines: [string, string, string] }.
+ * POST /api/tagline { idea } → { taglines: [string, string, string], demo: boolean }.
  * The API key stays on the server (runtimeConfig.anthropicApiKey ← NUXT_ANTHROPIC_API_KEY).
+ * Without a key it runs in demo mode: sample taglines from templates, no external call.
  */
 export default defineEventHandler(async (event) => {
   rateLimit(event, { key: "tagline", limit: 8, windowMs: 60_000 });
@@ -29,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const { anthropicApiKey } = useRuntimeConfig(event);
   if (!anthropicApiKey) {
-    throw createError({ statusCode: 503, statusMessage: "The AI widget isn't configured yet (missing API key)." });
+    return { taglines: demoTaglines(parsed.data.idea), demo: true };
   }
   client ??= new Anthropic({ apiKey: anthropicApiKey, maxRetries: 2, timeout: 20_000 });
 
@@ -51,7 +53,7 @@ export default defineEventHandler(async (event) => {
     if (taglines.length < 3) {
       throw createError({ statusCode: 502, statusMessage: "The tagline machine hiccuped. Please try again." });
     }
-    return { taglines: taglines.slice(0, 3) as [string, string, string] };
+    return { taglines: taglines.slice(0, 3) as [string, string, string], demo: false };
   } catch (error) {
     if (isError(error)) throw error; // our own createError above
     // Most specific first; never leak provider details to the browser.

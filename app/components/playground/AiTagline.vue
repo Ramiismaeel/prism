@@ -5,6 +5,7 @@ import { IDEA_MAX, IDEA_MIN } from "#shared/utils/tagline";
 const idea = ref("");
 const loading = ref(false);
 const taglines = ref<string[]>([]);
+const demo = ref(false); // true when the server has no API key and returned sample taglines
 const runId = ref(0); // re-keys the results so each run animates fresh
 const { toast } = useToast();
 
@@ -15,8 +16,9 @@ async function generate() {
   loading.value = true;
   taglines.value = [];
   try {
-    const res = await $fetch<{ taglines: string[] }>("/api/tagline", { method: "POST", body: { idea: idea.value } });
+    const res = await $fetch<{ taglines: string[]; demo: boolean }>("/api/tagline", { method: "POST", body: { idea: idea.value } });
     taglines.value = res.taglines;
+    demo.value = res.demo;
     runId.value++;
   } catch (err) {
     const message = (err as { data?: { statusMessage?: string } }).data?.statusMessage;
@@ -43,7 +45,7 @@ const pulse = computed(() => (reduceMotion.value ? { duration: 0 } : { duration:
 <template>
   <PlaygroundDemoBlock
     title="AI tagline machine"
-    description="Describe a startup idea and Claude (Haiku) writes three playful taglines. Your idea is sent to Anthropic's API."
+    description="Describe a startup idea and Claude (Haiku) writes three playful taglines. With an API key set, your idea is sent to Anthropic's API; without one, the widget runs in demo mode."
   >
     <form class="space-y-4" @submit.prevent="generate">
       <FormTextarea v-model="idea" label="Your startup idea" name="idea" :rows="2" :maxlength="IDEA_MAX" />
@@ -53,7 +55,17 @@ const pulse = computed(() => (reduceMotion.value ? { duration: 0 } : { duration:
     </form>
 
     <!-- Announce results once they arrive. -->
-    <p class="sr-only" aria-live="polite">{{ loading ? "Generating taglines" : taglines.length ? `${taglines.length} taglines ready` : "" }}</p>
+    <p class="sr-only" aria-live="polite">
+      {{ loading ? "Generating taglines" : taglines.length ? `${taglines.length} ${demo ? "sample " : ""}taglines ready` : "" }}
+    </p>
+
+    <p
+      v-if="demo && taglines.length && !loading"
+      class="mt-6 flex items-start gap-2 rounded-2xl bg-sun/15 px-4 py-3 text-sm text-sun-ink dark:bg-sun/10 dark:text-sun-glow"
+    >
+      <Icon name="lucide:flask-conical" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      <span><strong>Demo mode:</strong> these are sample taglines. Add an Anthropic API key (<code class="font-mono text-xs">NUXT_ANTHROPIC_API_KEY</code>) to get real ones from Claude.</span>
+    </p>
 
     <div class="mt-6 min-h-[13rem]">
       <AnimatePresence mode="wait">

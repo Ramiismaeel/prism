@@ -33,7 +33,7 @@ The Playground's "AI lab" calls Claude from the server. Copy `.env.example` to `
 NUXT_ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Without a key the rest of the site works normally, and the widget shows a friendly "not configured" message. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
+Without a key the widget runs in **demo mode**: it returns sample taglines built from your idea (clearly labelled as samples) and makes no external calls. Add a key and it switches to Claude automatically. The key is only read on the server (`runtimeConfig`); it is never sent to the browser. Each generation is one small Claude Haiku request, rate-limited to 8 per minute per visitor.
 
 ## Scripts
 
