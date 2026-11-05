@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       { name: "Inter", provider: "google", weights: [400, 500, 600, 700], global: true },
     ],
   },
-  image: { domains: ["picsum.photos"] },
+  image: { domains: ["picsum.photos", "fastly.picsum.photos"] }, // picsum redirects to its fastly CDN
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },

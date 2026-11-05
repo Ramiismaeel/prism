@@ -230,19 +230,19 @@ const props = withDefaults(
 
 ## 4. Animation Catalogue (must all exist somewhere in the site)
 
-- [ ] Scroll reveal (`Reveal`)
-- [ ] Staggered children (`StaggerList`)
-- [ ] Split-text letter/word reveal (`SplitText`)
+- [x] Scroll reveal (`Reveal`)
+- [x] Staggered children (`StaggerList`)
+- [x] Split-text letter/word reveal (`SplitText`)
 - [x] Page + layout transitions (CSS in `main.css`)
 - [ ] `AnimatePresence` enter/exit (mobile menu, modal, toast)
 - [ ] Layout animations (tabs indicator, gallery filter reorder)
 - [ ] Spring hover / tap scale on buttons and cards
 - [ ] Drag with constraints (playground, 404 page)
-- [ ] Parallax with `useScroll` + `useTransform` (`Parallax`)
-- [ ] Scroll progress bar (`ScrollProgress`)
-- [ ] Count-up numbers when in view (`CountUp`)
+- [x] Parallax with `useScroll` + `useTransform` (`Parallax`)
+- [x] Scroll progress bar (`ScrollProgress`)
+- [x] Count-up numbers when in view (`CountUp`)
 - [ ] Infinite marquee (`Marquee`)
-- [ ] Animated gradient blobs (`GradientBlob`)
+- [x] Animated gradient blobs (`GradientBlob`)
 - [ ] 3D tilt following the cursor (`TiltCard`)
 - [ ] Magnetic button following the cursor (`MagneticButton`)
 - [x] Theme toggle sun/moon morph (`ThemeToggle`)
@@ -314,9 +314,9 @@ const props = withDefaults(
 **Accept when:** `npm run dev` works, all routes navigate with page transition, dark mode toggles and persists after reload, mobile menu opens/closes animated, no console errors.
 
 ### Phase 2 — Motion Kit
-- [ ] Build all components in `components/motion/`: `Reveal`, `StaggerList`, `SplitText`, `CountUp`, `Parallax`, `GradientBlob`.
-- [ ] Build `ScrollProgress` in `components/layout/`.
-- [ ] Add a temporary demo of each on `/playground`.
+- [x] Build all components in `components/motion/`: `Reveal`, `StaggerList`, `SplitText`, `CountUp`, `Parallax`, `GradientBlob`.
+- [x] Build `ScrollProgress` in `components/layout/`.
+- [x] Add a temporary demo of each on `/playground`.
 
 **Accept when:** each motion component works on the playground, respects reduced motion, works in both themes.
 
@@ -457,3 +457,10 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 1 — `main.css`: added a global `:focus-visible` outline (grape, sky in dark mode). `.text-prism` repeats grape at the end of the gradient so the loop is seamless. Also added a skip link in `layouts/default.vue`.
 - 2026-11-05 — Phase 1 — `MobileMenu` teleports to `#teleports` (Nuxt's SSR-safe teleport target) — the header's `backdrop-filter` would otherwise make `position: fixed` children relative to the header.
 - 2026-11-05 — Phase 1 — The decorative SVG in `ThemeToggle` uses `pointer-events: none` — otherwise Chrome gives focus to the masked `<circle>` on click instead of the button.
+- 2026-11-05 — Phase 2 — Added `typescript` and `vue-tsc` as devDependencies — `npx nuxi typecheck` needs them.
+- 2026-11-05 — Phase 2 — The motion kit uses `<Motion :as>` instead of `motion.div`, so callers can pick the tag. `as` props are typed as the literal union `MotionTag` (`app/types/motion.ts`), because a plain `string` breaks motion-v's prop typings.
+- 2026-11-05 — Phase 2 — `app.vue` wraps the app in `<MotionConfig reduced-motion="user">` as a reduced-motion safety net. With OS reduced motion on, Motion logs a one-time dev-only console warning ("You have Reduced Motion enabled…"); this is expected.
+- 2026-11-05 — Phase 2 — Reduced motion only changes transitions and callbacks, never the rendered initial styles, because `useReducedMotion()` can differ between SSR and the first client render (hydration mismatch). `Parallax` gates its strength with a motion value that is set after mount.
+- 2026-11-05 — Phase 2 — Added `fastly.picsum.photos` to `image.domains` — picsum redirects there, and IPX returned 403 without it.
+- 2026-11-05 — Phase 2 — `layouts/default.vue` wrapper gets `overflow-x-clip` — Reveal x-offsets and blobs were causing sideways scroll on mobile. It isn't on `body`, because body overflow propagates to the viewport as `hidden`.
+- 2026-11-05 — Phase 2 — Playground demos use a temporary `components/playground/DemoBlock.vue` (card with a Replay button that remounts run-once animations).

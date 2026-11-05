@@ -23,7 +23,7 @@ npm run build        # production build
 npm run preview      # preview the production build
 npm run generate     # static generation
 npx eslint .         # lint (there is no npm script for it)
-npx nuxi typecheck   # type check (needs vue-tsc, which is not installed yet)
+npx nuxi typecheck   # type check (vue-tsc)
 ```
 
 There is no test framework in the repo. You verify a phase by checking its acceptance criteria against the running dev server. Chrome is installed on this machine, so client-side behavior (hydration, transitions, theme persistence, focus handling, console errors) can be scripted with `playwright-core` (`chromium.launch({ channel: "chrome" })`). Install it in a scratch directory, not as a project dependency.
@@ -41,12 +41,18 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Forms:** Phase 7 plans one shared Zod schema in `app/utils/contactSchema.ts`. Both the client form and `server/api/contact.post.ts` import it.
 - **Secrets:** the Claude API key is set only through `runtimeConfig.anthropicApiKey`, which comes from `NUXT_ANTHROPIC_API_KEY` in `.env` (gitignored). Read it only on the server, in `server/api/tagline.post.ts`.
 
+- **Motion kit** (`app/components/motion/*`, used as `<MotionReveal>`, `<MotionSplitText>`, …): built on `<Motion :as>`, with `as` typed as `MotionTag` from `~/types/motion`. Never type it as `string`, because that breaks motion-v's prop types. `app.vue` wraps everything in `<MotionConfig reduced-motion="user">`.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
 
 ## Gotchas found so far
 
+- **Reduced motion vs SSR:** `useReducedMotion()` (VueUse `useMediaQuery`) can already be `true` on the first client render while the server rendered `false`. Let it change only `transition`s, callbacks or motion values set after mount, never `initial`, `animate`, `style` or text that gets rendered, or hydration mismatches. Expected console noise: with OS reduced motion on, Motion logs one dev-only warning ("You have Reduced Motion enabled…").
+- **`.text-prism` with animated children:** `background-clip: text` doesn't reach children that are their own stacking context (transform, opacity, filter). Never put `.text-prism` on `MotionSplitText`; the text renders invisible.
+- **Root nodes:** in dev mode Vue keeps template comments. A comment placed before the root element of a layout or page counts as a second root node (NUXT_E4002), so put comments inside the root.
+- **Horizontal overflow:** the layout wrapper has `overflow-x-clip` so animation offsets never cause sideways scroll. Don't move it to `body`.
+- **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.
 - **Decorative SVGs in buttons:** an animated SVG inside a `<button>` (especially one using `mask`) needs `pointer-events: none`. Otherwise Chrome gives focus to the SVG child on click, which shows a stray focus ring and breaks Tab order.

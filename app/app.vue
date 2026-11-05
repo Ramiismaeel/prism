@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { MotionConfig } from "motion-v";
+
 const SITE_TITLE = "Prism — Creative Playground";
 
 useHead({
@@ -9,7 +11,10 @@ useHead({
 
 <template>
   <NuxtRouteAnnouncer />
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <!-- Safety net: Motion skips transform/layout animations for users who prefer reduced motion. -->
+  <MotionConfig reduced-motion="user">
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </MotionConfig>
 </template>
