@@ -51,12 +51,14 @@ There is no test framework in the repo. You verify a phase by checking its accep
 
 ## Gotchas found so far
 
-- **Reduced motion vs SSR:** `useReducedMotion()` (VueUse `useMediaQuery`) can already be `true` on the first client render while the server rendered `false`. Let it change only `transition`s, callbacks or motion values set after mount, never `initial`, `animate`, `style` or text that gets rendered, or hydration mismatches. Expected console noise: with OS reduced motion on, Motion logs one dev-only warning ("You have Reduced Motion enabled…").
+- **Reduced motion vs SSR:** `useReducedMotion()` (VueUse `useMediaQuery`) can already be `true` on the first client render while the server rendered `false`. Use it only for `transition`s and callbacks. For anything rendered (`v-if`, attributes, text), use `useMotionEnabled()`, which stays `false` until after mount. Expected console noise: with OS reduced motion on, Motion logs one dev-only warning ("You have Reduced Motion enabled…").
 - **`.text-prism` with animated children:** `background-clip: text` doesn't reach children that are their own stacking context (transform, opacity, filter). Never put `.text-prism` on `MotionSplitText`; the text renders invisible.
 - **Root nodes:** in dev mode Vue keeps template comments. A comment placed before the root element of a layout or page counts as a second root node (NUXT_E4002), so put comments inside the root.
 - **Horizontal overflow:** the layout wrapper has `overflow-x-clip` so animation offsets never cause sideways scroll. Don't move it to `body`.
 - **Clipped overflow hides layout bugs:** because of `overflow-x-clip`, too-wide content gets cut off rather than causing a scrollbar. Grid and flex children holding wide or scrolling content need `min-w-0`. When verifying at 375px, check element bounds, not just `scrollWidth`.
 - **Motion playback speed:** never set an animation's `speed` to exactly 0. Ease to something like 0.001 (see `UiMarquee`).
+- **vue-tsc and URL template literals:** vue-tsc 3.3 mangles `` :src="`https://…${x}`" `` on components (the `//` turns into a comment start), which silently breaks type-checking for the rest of the template ("Cannot find name", bogus `.value` errors). Build URLs in script, e.g. with `picsum(seed, w, h)` from `~/utils/picsum`.
+- **Illustrations:** use `<UiIllustration name="cta" alt=… :width :height>`. The available files are read from `public/illustrations/` at dev/build start (`runtimeConfig.public.illustrations`), so missing ones render a labelled placeholder with no request. Adding an SVG restarts the dev server.
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.

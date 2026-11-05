@@ -330,8 +330,8 @@ const props = withDefaults(
 **Accept when:** every UI component is demoed on `/playground`, keyboard works, both themes look good.
 
 ### Phase 4 — Home Page
-- [ ] Build all `sections/` used by Home and assemble `pages/index.vue` per section 5.
-- [ ] Put content in `app/data/` (features, testimonials, stats).
+- [x] Build all `sections/` used by Home and assemble `pages/index.vue` per section 5.
+- [x] Put content in `app/data/` (features, testimonials, stats).
 
 **Accept when:** Home matches the spec, smooth at 60fps on desktop, responsive at 375/768/1280.
 
@@ -470,3 +470,10 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 3 — `BaseButton` wraps its element with `<Motion as-child>`, so it renders a real `NuxtLink` (`to`), `<a>` (`href`) or `<button>` with the spring hover/tap and no wrapper element. Disabled links get `aria-disabled` and `tabindex=-1`.
 - 2026-11-05 — Phase 3 — `Marquee` eases its playback speed to 0.001 rather than 0 on hover — at exactly 0, motion holds the animation, and raising the speed again either leaves it frozen or jumps it to the loop start.
 - 2026-11-05 — Phase 3 — Playground demos split into `components/playground/{Motion,Controls,Surfaces,Overlays,Disclosure}Demo(s).vue` (the page would have far exceeded the component size guideline). `DemoBlock` titles are now `h3` under section `h2`s.
+- 2026-11-05 — Phase 4 — Home content lives in `app/data/{features,stats,testimonials,clients}.ts`. The client-logo marquee is its own section, `sections/LogoMarquee.vue`.
+- 2026-11-05 — Phase 4 — Hero headline: "We bend light" uses `SplitText`, and "into ideas." is a separate `Reveal` with `.text-prism`, because gradient text can't be split (the letters render invisible).
+- 2026-11-05 — Phase 4 — Added `ui/Illustration.vue`. `nuxt.config.ts` lists `public/illustrations/*.svg` at startup into `runtimeConfig.public.illustrations`, so a missing file renders the rule-8 placeholder without a request (no 404 in the console). `watch` restarts the dev server when an SVG is added. Added `@types/node` for the `node:fs` import.
+- 2026-11-05 — Phase 4 — Added the `picsum(seed, w, h)` util and use it instead of template literals in template bindings: vue-tsc 3.3 mangles `` :src="`https://…${x}`" `` on components, which silently broke type-checking for the rest of the template.
+- 2026-11-05 — Phase 4 — Added `useMotionEnabled()`: false during SSR and hydration, then `!prefersReducedMotion`. Use it for anything *rendered* that depends on reduced motion (the carousel's pause button and `aria-live` caused a hydration mismatch before this).
+- 2026-11-05 — Phase 4 — Testimonials: slides stack in one grid cell (exit and enter overlap with no height jump). Auto-play runs only while the carousel is in view, pauses on hover or focus, has a pause button and is off for reduced motion. Swipe uses motion drag. Controls are in `sections/TestimonialsControls.vue`.
+- 2026-11-05 — Phase 4 — Contrast: `StatsBand` uses a darker `grape-ink → grape → coral-ink` gradient (white text, worst pixel 4.85:1 including the blobs). The light-mode `CtaBand` pastel is at 60% so the grape-ink button text passes (4.84:1).
