@@ -15,5 +15,6 @@
       <slot />
     </main>
     <LayoutAppFooter />
+    <UiToast />
   </div>
 </template>

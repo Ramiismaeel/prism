@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Motion, useReducedMotion } from "motion-v";
-
-type ThemeColor = "grape" | "coral" | "sun" | "mint" | "sky";
+import { COLOR_CLASSES, type ThemeColor } from "~/utils/themeColors";
 
 const props = withDefaults(
   defineProps<{
@@ -14,15 +13,6 @@ const props = withDefaults(
   }>(),
   { color: "grape", duration: 14, delay: 0, drift: 40 },
 );
-
-// Full class names so Tailwind can see them.
-const COLOR_CLASS: Record<ThemeColor, string> = {
-  grape: "bg-grape",
-  coral: "bg-coral",
-  sun: "bg-sun",
-  mint: "bg-mint",
-  sky: "bg-sky",
-};
 
 const keyframes = computed(() => {
   const d = props.drift;
@@ -54,7 +44,7 @@ const transition = computed(() =>
   <Motion
     aria-hidden="true"
     class="pointer-events-none absolute rounded-full opacity-50 blur-3xl will-change-transform dark:opacity-45"
-    :class="COLOR_CLASS[color]"
+    :class="COLOR_CLASSES[color].bg"
     :animate="keyframes"
     :transition="transition"
   />

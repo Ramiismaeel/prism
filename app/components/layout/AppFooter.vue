@@ -28,7 +28,7 @@ const year = new Date().getFullYear();
           <li v-for="link in navLinks" :key="link.to">
             <NuxtLink
               :to="link.to"
-              class="text-zinc-600 transition-colors hover:text-grape dark:text-zinc-400 dark:hover:text-violet-300"
+              class="text-zinc-600 transition-colors hover:text-grape dark:text-zinc-400 dark:hover:text-grape-glow"
             >
               {{ link.label }}
             </NuxtLink>

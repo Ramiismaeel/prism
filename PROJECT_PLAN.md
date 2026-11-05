@@ -234,17 +234,17 @@ const props = withDefaults(
 - [x] Staggered children (`StaggerList`)
 - [x] Split-text letter/word reveal (`SplitText`)
 - [x] Page + layout transitions (CSS in `main.css`)
-- [ ] `AnimatePresence` enter/exit (mobile menu, modal, toast)
+- [x] `AnimatePresence` enter/exit (mobile menu, modal, toast)
 - [ ] Layout animations (tabs indicator, gallery filter reorder)
-- [ ] Spring hover / tap scale on buttons and cards
+- [x] Spring hover / tap scale on buttons and cards
 - [ ] Drag with constraints (playground, 404 page)
 - [x] Parallax with `useScroll` + `useTransform` (`Parallax`)
 - [x] Scroll progress bar (`ScrollProgress`)
 - [x] Count-up numbers when in view (`CountUp`)
-- [ ] Infinite marquee (`Marquee`)
+- [x] Infinite marquee (`Marquee`)
 - [x] Animated gradient blobs (`GradientBlob`)
-- [ ] 3D tilt following the cursor (`TiltCard`)
-- [ ] Magnetic button following the cursor (`MagneticButton`)
+- [x] 3D tilt following the cursor (`TiltCard`)
+- [x] Magnetic button following the cursor (`MagneticButton`)
 - [x] Theme toggle sun/moon morph (`ThemeToggle`)
 - [ ] Form error shake + success checkmark SVG path draw
 - [ ] Card flip on hover (About team cards)
@@ -321,11 +321,11 @@ const props = withDefaults(
 **Accept when:** each motion component works on the playground, respects reduced motion, works in both themes.
 
 ### Phase 3 — UI Kit
-- [ ] Build all components in `components/ui/` (see folder structure).
-- [ ] `Modal` and `Toast` use `AnimatePresence`; `Modal` traps focus and closes on ESC/backdrop.
-- [ ] `Tabs` and `Accordion` are keyboard accessible.
-- [ ] `BaseButton` supports variants (`solid`, `outline`, `ghost`) and colors (5 theme colors) and sizes.
-- [ ] Toast system via a composable `useToast()`.
+- [x] Build all components in `components/ui/` (see folder structure).
+- [x] `Modal` and `Toast` use `AnimatePresence`; `Modal` traps focus and closes on ESC/backdrop.
+- [x] `Tabs` and `Accordion` are keyboard accessible.
+- [x] `BaseButton` supports variants (`solid`, `outline`, `ghost`) and colors (5 theme colors) and sizes.
+- [x] Toast system via a composable `useToast()`.
 
 **Accept when:** every UI component is demoed on `/playground`, keyboard works, both themes look good.
 
@@ -464,3 +464,9 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 2 — Added `fastly.picsum.photos` to `image.domains` — picsum redirects there, and IPX returned 403 without it.
 - 2026-11-05 — Phase 2 — `layouts/default.vue` wrapper gets `overflow-x-clip` — Reveal x-offsets and blobs were causing sideways scroll on mobile. It isn't on `body`, because body overflow propagates to the viewport as `hidden`.
 - 2026-11-05 — Phase 2 — Playground demos use a temporary `components/playground/DemoBlock.vue` (card with a Replay button that remounts run-once animations).
+- 2026-11-05 — Phase 3 — Added text-safe `*-ink` (light mode) and `*-glow` (dark mode) shades of the five theme colors in `main.css`, plus a `COLOR_CLASSES` map in `app/utils/themeColors.ts` — the base `sun`/`mint`/`sky` colors fail 4.5:1 as small text. Solid fills use white text only on grape and `zinc-950` on the others. Phase 1's ad-hoc `violet-300` classes were replaced with `grape-glow`.
+- 2026-11-05 — Phase 3 — Added `useScrollLock()` (a shared counter, so stacked overlays don't unlock each other); `MobileMenu` now uses it. `html` has `scrollbar-gutter: stable`, so locking scroll doesn't shift the layout.
+- 2026-11-05 — Phase 3 — `ui/Toast.vue` is the toast *viewport* (one persistent `aria-live` region), mounted once in `layouts/default.vue`. `useToast()` returns `toast`, `dismiss`, `pause` and `resume`; at most 4 toasts show at once.
+- 2026-11-05 — Phase 3 — `BaseButton` wraps its element with `<Motion as-child>`, so it renders a real `NuxtLink` (`to`), `<a>` (`href`) or `<button>` with the spring hover/tap and no wrapper element. Disabled links get `aria-disabled` and `tabindex=-1`.
+- 2026-11-05 — Phase 3 — `Marquee` eases its playback speed to 0.001 rather than 0 on hover — at exactly 0, motion holds the animation, and raising the speed again either leaves it frozen or jumps it to the loop start.
+- 2026-11-05 — Phase 3 — Playground demos split into `components/playground/{Motion,Controls,Surfaces,Overlays,Disclosure}Demo(s).vue` (the page would have far exceeded the component size guideline). `DemoBlock` titles are now `h3` under section `h2`s.

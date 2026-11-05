@@ -1,6 +1,6 @@
 <template>
   <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-    <p class="mb-3 text-sm font-semibold tracking-widest text-grape uppercase dark:text-violet-300">
+    <p class="mb-3 text-sm font-semibold tracking-widest text-grape uppercase dark:text-grape-glow">
       Creative studio
     </p>
     <h1 class="text-5xl font-bold tracking-tight sm:text-7xl">

@@ -13,16 +13,7 @@ const close = () => {
 };
 
 useFocusTrap(panel, open, close);
-
-// Lock page scroll while the menu is open.
-watch(open, (isOpen) => {
-  if (import.meta.client) {
-    document.documentElement.style.overflow = isOpen ? "hidden" : "";
-  }
-});
-onBeforeUnmount(() => {
-  document.documentElement.style.overflow = "";
-});
+useScrollLock(open);
 
 const panelTransition = computed(() =>
   reduceMotion.value
@@ -96,7 +87,7 @@ const linkVariants = {
                   class="flex items-center justify-between rounded-xl px-4 py-3 font-display text-lg font-medium transition-colors"
                   :class="
                     isNavActive(link.to, route.path)
-                      ? 'bg-grape/10 text-grape dark:bg-grape/20 dark:text-violet-300'
+                      ? 'bg-grape/10 text-grape dark:bg-grape/20 dark:text-grape-glow'
                       : 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
                   "
                   @click="close"
@@ -115,7 +106,7 @@ const linkVariants = {
                 target="_blank"
                 rel="noopener noreferrer"
                 :aria-label="s.label"
-                class="grid size-10 place-items-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-grape dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-violet-300"
+                class="grid size-10 place-items-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-grape dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-grape-glow"
               >
                 <Icon :name="s.icon" class="size-4" />
               </a>

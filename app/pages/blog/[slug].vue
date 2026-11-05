@@ -9,7 +9,7 @@ useSeoMeta({ title: () => slug.value });
   <article class="mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8">
     <NuxtLink
       to="/blog"
-      class="mb-6 inline-flex items-center gap-1 text-sm font-medium text-grape dark:text-violet-300"
+      class="mb-6 inline-flex items-center gap-1 text-sm font-medium text-grape dark:text-grape-glow"
     >
       <Icon name="lucide:arrow-left" class="size-4" /> All posts
     </NuxtLink>

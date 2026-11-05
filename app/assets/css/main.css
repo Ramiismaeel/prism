@@ -8,12 +8,27 @@
   --color-mint: #10b981;
   --color-sky: #0ea5e9;
 
+  /* Text-safe shades. The base colors are too light for small text on white (and too dark
+     on zinc-950), so use `text-<color>-ink` in light mode and `text-<color>-glow` in dark mode. */
+  --color-grape-ink: #6d28d9;
+  --color-coral-ink: #be123c;
+  --color-sun-ink: #b45309;
+  --color-mint-ink: #047857;
+  --color-sky-ink: #0369a1;
+  --color-grape-glow: #c4b5fd;
+  --color-coral-glow: #fda4af;
+  --color-sun-glow: #fcd34d;
+  --color-mint-glow: #6ee7b7;
+  --color-sky-glow: #7dd3fc;
+
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Reserve the scrollbar's space so locking scroll (modal, menu) doesn't shift the layout. */
+  scrollbar-gutter: stable;
 }
 body {
   font-family: var(--font-body);

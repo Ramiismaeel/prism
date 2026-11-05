@@ -42,6 +42,9 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **Secrets:** the Claude API key is set only through `runtimeConfig.anthropicApiKey`, which comes from `NUXT_ANTHROPIC_API_KEY` in `.env` (gitignored). Read it only on the server, in `server/api/tagline.post.ts`.
 
 - **Motion kit** (`app/components/motion/*`, used as `<MotionReveal>`, `<MotionSplitText>`, …): built on `<Motion :as>`, with `as` typed as `MotionTag` from `~/types/motion`. Never type it as `string`, because that breaks motion-v's prop types. `app.vue` wraps everything in `<MotionConfig reduced-motion="user">`.
+- **Colors in components:** take a `color: ThemeColor` prop and pick classes from `COLOR_CLASSES` (`~/utils/themeColors`), which holds full class strings so Tailwind detects them. Never build class names like `` `bg-${color}` ``. For colored *text* use `text-<color>-ink dark:text-<color>-glow`, because the base colors fail contrast as small text.
+- **Overlays** (menu, modal, future lightbox): `<Teleport to="#teleports">` + `useFocusTrap(el, open, close)` + `useScrollLock(open)`. `UiModal` already does all of this, so reuse it.
+- **Toasts:** `<UiToast />` is mounted once in the default layout. Call `useToast().toast({ title, description?, type })` from anywhere.
 - **Shared data and helpers:** nav and social links (plus `isNavActive`) live in `app/data/navigation.ts`. `app/composables/useFocusTrap.ts` handles focus trapping, ESC and focus restore for any overlay.
 - **Page titles:** `app.vue` sets a `titleTemplate` (`"<title> · Prism"`). Pages call `useSeoMeta({ title })`, and the home page sets no title.
 - **Icons:** `lucide:*` for UI icons and `simple-icons:*` for brand logos. Both are installed locally (`@iconify-json/*`).
@@ -52,6 +55,8 @@ There is no test framework in the repo. You verify a phase by checking its accep
 - **`.text-prism` with animated children:** `background-clip: text` doesn't reach children that are their own stacking context (transform, opacity, filter). Never put `.text-prism` on `MotionSplitText`; the text renders invisible.
 - **Root nodes:** in dev mode Vue keeps template comments. A comment placed before the root element of a layout or page counts as a second root node (NUXT_E4002), so put comments inside the root.
 - **Horizontal overflow:** the layout wrapper has `overflow-x-clip` so animation offsets never cause sideways scroll. Don't move it to `body`.
+- **Clipped overflow hides layout bugs:** because of `overflow-x-clip`, too-wide content gets cut off rather than causing a scrollbar. Grid and flex children holding wide or scrolling content need `min-w-0`. When verifying at 375px, check element bounds, not just `scrollWidth`.
+- **Motion playback speed:** never set an animation's `speed` to exactly 0. Ease to something like 0.001 (see `UiMarquee`).
 - **Picsum hosts:** picsum redirects to `fastly.picsum.photos`. Both hosts must stay in `image.domains`.
 - **Overlays:** fixed-position overlays must `<Teleport to="#teleports">`. The sticky header uses `backdrop-filter`, which traps `position: fixed` descendants, and `#teleports` is Nuxt's SSR-safe teleport target.
 - **Template refs:** a template ref on a `<motion.*>` element returns the component instance, not the DOM node. Put the `ref` on a plain inner element when you need DOM access.
