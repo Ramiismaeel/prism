@@ -249,7 +249,7 @@ const props = withDefaults(
 - [x] Form error shake + success checkmark SVG path draw
 - [x] Card flip on hover (About team cards)
 - [x] Animated gradient text (`.text-prism`)
-- [ ] Typewriter text effect (Playground AI widget)
+- [x] Typewriter text effect (Playground AI widget)
 
 ---
 
@@ -356,8 +356,8 @@ const props = withDefaults(
 **Accept when:** invalid input shows errors + shake, valid submit shows success animation + toast, server rejects invalid payloads.
 
 ### Phase 8 — Bonus: Claude API Tagline Widget
-- [ ] `npm i @anthropic-ai/sdk`. Add `NUXT_ANTHROPIC_API_KEY=` to `.env` (ask the user to fill in the key; never hard-code it).
-- [ ] Create `server/api/tagline.post.ts`:
+- [x] `npm i @anthropic-ai/sdk`. Add `NUXT_ANTHROPIC_API_KEY=` to `.env` (ask the user to fill in the key; never hard-code it).
+- [x] Create `server/api/tagline.post.ts`:
 
 ```ts
 import Anthropic from '@anthropic-ai/sdk'
@@ -394,8 +394,8 @@ export default defineEventHandler(async (event) => {
 })
 ```
 
-- [ ] Playground widget: input + button, loading shimmer, results appear with a typewriter effect and staggered reveal, errors shown via toast.
-- [ ] Simple protection: disable button while loading; limit idea length.
+- [x] Playground widget: input + button, loading shimmer, results appear with a typewriter effect and staggered reveal, errors shown via toast.
+- [x] Simple protection: disable button while loading; limit idea length.
 
 **Accept when:** widget returns 3 taglines, no API key reaches the browser (check the Network tab and the client bundle).
 
@@ -499,3 +499,7 @@ _The agent records deviations from this plan here (date — phase — change —
 - 2026-11-05 — Phase 7 — Step changes use `AnimatePresence mode="wait"`, which mounts the next step only after the old one has left. Focus (step heading, or the field the server rejected) is applied when the new step mounts, not on `nextTick`.
 - 2026-11-05 — Phase 7 — A server 400 maps `data.fieldErrors` back to the step that owns the first bad field, and shows an error toast.
 - 2026-11-05 — Phase 7 — `error.vue` wraps itself in `<MotionConfig>` and `<NuxtLayout>` (it replaces app.vue). 4xx errors show their message; 5xx stay generic. It sets `robots: noindex`. In dev, visiting an unknown URL logs Vue Router/Nuxt diagnostics (R0004/E1005); production is clean.
+- 2026-11-05 — Phase 8 — `server/api/tagline.post.ts` uses structured outputs (`client.messages.parse` + `zodOutputFormat`) instead of parsing JSON out of text, so the response always matches `{ taglines: string[] }`. The route still enforces exactly 3. Model `claude-haiku-5-5` as planned, with `thinking: { type: "disabled" }` + `effort: "low"` (a tiny creative task; keeps it fast and cheap, and thinking can't eat into `max_tokens`), `max_tokens: 512`. No `temperature` (rejected from API version 2026-10-21).
+- 2026-11-05 — Phase 8 — Errors map to safe statuses without leaking provider details: 400 bad idea, 503 missing or invalid key, 422 refusal (Haiku 5.5 has no server-side fallback), 429 rate limited, 502/503 provider/network. Added a small per-IP in-memory rate limit (`server/utils/rateLimit.ts`, 8/min) because every call costs money. Idea limits are shared in `shared/utils/tagline.ts`.
+- 2026-11-05 — Phase 8 — `.env` (gitignored) has an empty `NUXT_ANTHROPIC_API_KEY=` for the user to fill in. `.env.example` is committed. Verified: production client bundle has 0 references to the server key config; with a fake key set, no page, payload or response contains it, and the real SDK call maps Anthropic's 401 to the friendly 503.
+- 2026-11-05 — Phase 8 — Added `components/motion/Typewriter.vue` (motion-v `animate()`-driven; full text for screen readers; instant with reduced motion). The widget lives in a new "AI lab" section of the playground, with a loading shimmer, staggered typed results, copy buttons and error toasts. UI tests mock the endpoint; no real model calls were made (no key available).

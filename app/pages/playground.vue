@@ -5,6 +5,7 @@ useSeoMeta({ title: "Playground" });
 const sections = [
   { id: "motion-kit", title: "Motion kit", blurb: "Scroll-driven and in-view animations." },
   { id: "ui-kit", title: "UI kit", blurb: "Buttons, surfaces, overlays and disclosure widgets." },
+  { id: "ai-lab", title: "AI lab", blurb: "A tiny Claude-powered widget, with the API key kept on the server." },
 ];
 </script>
 
@@ -53,6 +54,7 @@ const sections = [
           <p class="mt-1 text-zinc-600 dark:text-zinc-400">{{ s.blurb }}</p>
         </div>
         <PlaygroundMotionDemos v-if="s.id === 'motion-kit'" />
+        <PlaygroundAiTagline v-else-if="s.id === 'ai-lab'" />
         <div v-else class="space-y-6">
           <PlaygroundControlsDemo />
           <PlaygroundSurfacesDemo />
