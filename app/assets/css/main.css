@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-grape: #7c3aed;
+  --color-coral: #f43f5e;
+  --color-sun: #f59e0b;
+  --color-mint: #10b981;
+  --color-sky: #0ea5e9;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-body);
+  @apply bg-white text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+/* Visible keyboard focus everywhere */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-grape);
+  outline-offset: 3px;
+}
+.dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: var(--color-sky);
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active,
+.layout-enter-active,
+.layout-leave-active {
+  transition: all 0.4s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+  filter: blur(6px);
+}
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0;
+}
+
+/* Multi-color gradient text helper */
+.text-prism {
+  background: linear-gradient(
+    90deg,
+    var(--color-grape),
+    var(--color-coral),
+    var(--color-sun),
+    var(--color-mint),
+    var(--color-sky),
+    var(--color-grape)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: prism-shift 8s linear infinite;
+}
+@keyframes prism-shift {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
