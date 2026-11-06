@@ -31,6 +31,7 @@ export default defineNuxtConfig({
       title: "Prism — Creative Playground",
       htmlAttrs: { lang: "en" },
       meta: [{ name: "description", content: "Prism — we bend light into ideas." }],
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/prism-favicon.svg" }],
     },
   },
   runtimeConfig: {
